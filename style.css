@@ -1,0 +1,283 @@
+/* --- Reset & Base --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px; /* Base font size */
+}
+
+body {
+    width: 100vw; /* Use viewport units */
+    height: 100vh;
+    overflow: hidden; /* Prevent scrollbars */
+    background-color: #000000;
+    color: #e0e0e0; /* Slightly softer white */
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    font-size: 0.875rem; /* ~14px */
+    line-height: 1.5;
+    overscroll-behavior: none; /* Prevent pull-to-refresh etc. */
+}
+
+#container {
+    width: 100%;
+    height: 100%;
+    position: fixed; /* Ensure it covers everything */
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+canvas {
+    display: block;
+}
+
+/* --- Loading Indicator --- */
+#loader {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #aaa;
+    font-size: 1.2rem;
+    z-index: 100;
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+}
+
+#loader.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+
+/* --- UI Panel --- */
+.ui-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-height: 50vh; /* Limit height on mobile */
+    overflow-y: auto;
+    background-color: rgba(25, 25, 25, 0.85);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 10;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    color: #ccc;
+    font-size: 0.8rem;
+    transition: transform 0.3s ease-out;
+}
+
+/* --- UI Sections & Groups --- */
+.ui-section {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 0.8rem;
+}
+.ui-section:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.control-group, .slider-group, .toggle-group {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping within a group */
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.3rem;
+}
+
+.button-group {
+    display: flex;
+    flex-wrap: wrap; /* Allow buttons to wrap */
+    gap: 0.4rem;
+}
+
+/* --- Basic UI Elements --- */
+label {
+    display: block; /* Ensure labels take full width if needed */
+    margin-bottom: 0.2rem;
+    font-weight: 400;
+    color: #eee;
+    flex-shrink: 0; /* Prevent labels from shrinking too much */
+    margin-right: 0.5rem; /* Space between label and control */
+}
+
+.info-text {
+    color: #aaa;
+    font-style: italic;
+    font-size: 0.75rem;
+}
+
+/* --- Buttons --- */
+.ui-button {
+    padding: 0.3rem 0.6rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    background-color: rgba(80, 80, 80, 0.5);
+    color: #ddd;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    font-size: 0.75rem;
+}
+
+.ui-button:hover {
+    background-color: rgba(100, 100, 100, 0.6);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.shape-btn.active, .preset-btn.active {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+/* --- Color Buttons --- */
+.color-btn {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    flex-shrink: 0;
+}
+.color-btn:hover { transform: scale(1.1); }
+.color-btn.selected { box-shadow: 0 0 0 3px #fff; }
+
+/* Dynamically set background colors in JS or here if fixed */
+.color-btn[data-color="0xffd700"] { background-color: #ffd700; }
+.color-btn[data-color="0xff7f50"] { background-color: #ff7f50; }
+.color-btn[data-color="0x00ff00"] { background-color: #00ff00; }
+.color-btn[data-color="0x40e0d0"] { background-color: #40e0d0; }
+.color-btn[data-color="0x007bff"] { background-color: #007bff; }
+.color-btn[data-color="0xff00ff"] { background-color: #ff00ff; }
+.color-btn[data-color="0x8a2be2"] { background-color: #8a2be2; }
+.color-btn[data-color="0xffffff"] { background-color: #ffffff; }
+
+
+/* --- Sliders --- */
+.slider-group {
+    align-items: center;
+    width: 100%; /* Make slider group take full width */
+}
+.slider-group label {
+    min-width: 90px; /* Align labels */
+    margin-bottom: 0;
+}
+
+input[type="range"] {
+    flex-grow: 1; /* Allow slider to fill space */
+    height: 5px;
+    cursor: pointer;
+    background: #555;
+    border-radius: 5px;
+    appearance: none; /* Override default look */
+    -webkit-appearance: none;
+    margin: 0 0.5rem; /* Space around slider */
+}
+/* Style the thumb (Chrome/Edge/Safari) */
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    background: #007bff;
+    border-radius: 50%;
+    cursor: pointer;
+}
+/* Style the thumb (Firefox) */
+input[type="range"]::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    background: #007bff;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+}
+
+.slider-group span {
+    min-width: 35px; /* Space for value display */
+    text-align: right;
+    font-size: 0.75rem;
+    color: #aaa;
+}
+
+/* --- Toggles --- */
+.toggle-group {
+    align-items: center;
+}
+.toggle-group label {
+     margin-bottom: 0;
+     margin-left: 0.3rem; /* Space between checkbox and label */
+     cursor: pointer;
+     color: #ccc;
+}
+input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: #007bff; /* Modern way to style checkbox color */
+}
+#audioToggleBtn { margin-right: 0.5rem; }
+#audioStatus { color: #ffc107; } /* Yellow for warning/disabled */
+#audioStatus.enabled { color: #28a745; } /* Green for enabled */
+
+
+/* --- Responsiveness --- */
+
+/* Medium screens (tablets, small laptops) */
+@media (min-width: 600px) {
+    html { font-size: 17px; } /* Slightly larger base font */
+
+    .ui-panel {
+        width: 450px; /* Fixed width panel */
+        max-height: none;
+        left: 10px; /* Position on the side */
+        bottom: 10px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 1.2rem;
+         font-size: 0.85rem;
+    }
+
+     .ui-section {
+         padding-bottom: 1rem;
+         margin-bottom: 1rem;
+     }
+     .ui-section:last-child { margin-bottom: 0; }
+
+    .control-group, .slider-group, .toggle-group {
+        /* Elements have more space, less wrapping needed */
+    }
+
+     .button-group {
+        gap: 0.5rem;
+    }
+     .ui-button { font-size: 0.8rem; padding: 0.4rem 0.8rem;}
+     .color-btn { width: 24px; height: 24px;}
+}
+
+/* Large screens (desktops) */
+@media (min-width: 1024px) {
+     html { font-size: 18px; }
+     .ui-panel {
+         width: 500px; /* Slightly wider panel */
+         padding: 1.5rem;
+         font-size: 0.9rem;
+     }
+     .ui-button { font-size: 0.85rem; }
+     .color-btn { width: 26px; height: 26px;}
+}
+
+/* Hide scrollbar across browsers */
+.ui-panel::-webkit-scrollbar { display: none; } /* Chrome, Safari, Opera */
+.ui-panel { -ms-overflow-style: none; scrollbar-width: none; } /* IE, Edge, Firefox */
