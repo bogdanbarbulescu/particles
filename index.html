@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Ensure correct viewport settings for responsiveness -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Feature-Rich Particle Morphing</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Optional: Link Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading Indicator -->
+    <div id="loader">Loading Particles...</div>
+
+    <!-- Container for the 3D scene -->
+    <div id="container"></div>
+
+    <!-- UI Panel -->
+    <div class="ui-panel">
+        <!-- Shape Info and Selection -->
+        <div class="ui-section">
+            <div id="shapeInfo" class="info-text">Shape: Sphere</div> <!-- Check ID: shapeInfo -->
+            <div class="shape-selector control-group">
+                <label>Morph to:</label>
+                <div class="button-group">
+                    <!-- Check class: shape-btn -->
+                    <button class="shape-btn ui-button" data-shape-index="0">Sphere</button>
+                    <button class="shape-btn ui-button" data-shape-index="1">Cube</button>
+                    <button class="shape-btn ui-button" data-shape-index="2">Torus</button>
+                    <button class="shape-btn ui-button" data-shape-index="3">Plane</button>
+                    <button class="shape-btn ui-button" data-shape-index="4">Spiral</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Presets -->
+        <div class="ui-section">
+            <label>Presets:</label>
+            <div class="preset-selector button-group">
+                 <!-- Check class: preset-btn -->
+                <button class="preset-btn ui-button" data-preset="default">Default</button>
+                <button class="preset-btn ui-button" data-preset="galaxy">Galaxy</button>
+                <button class="preset-btn ui-button" data-preset="neonCube">Neon Cube</button>
+                <button class="preset-btn ui-button" data-preset="delicate">Delicate</button>
+            </div>
+        </div>
+
+        <!-- Color Picker -->
+        <div class="ui-section">
+             <label>Color:</label>
+            <div class="color-picker control-group">
+                <div class="button-group">
+                     <!-- Check class: color-btn -->
+                    <button class="color-btn" data-color="0xffd700" title="Gold"></button>
+                    <button class="color-btn" data-color="0xff7f50" title="Coral"></button>
+                    <button class="color-btn" data-color="0x00ff00" title="Lime"></button>
+                    <button class="color-btn" data-color="0x40e0d0" title="Turquoise"></button>
+                    <button class="color-btn" data-color="0x007bff" title="Bright Blue"></button>
+                    <button class="color-btn" data-color="0xff00ff" title="Magenta"></button>
+                    <button class="color-btn" data-color="0x8a2be2" title="Blue Violet"></button>
+                    <button class="color-btn" data-color="0xffffff" title="White"></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sliders -->
+         <div class="ui-section sliders">
+             <div class="slider-group">
+                 <label for="pointSizeSlider">Point Size:</label>
+                 <!-- Check ID: pointSizeSlider -->
+                 <input type="range" id="pointSizeSlider" min="0.5" max="5" step="0.1" value="2.5">
+                 <!-- Check ID: pointSizeValue -->
+                 <span id="pointSizeValue">2.5</span>
+             </div>
+             <div class="slider-group">
+                 <label for="morphSpeedSlider">Morph Speed (s):</label>
+                  <!-- Check ID: morphSpeedSlider -->
+                 <input type="range" id="morphSpeedSlider" min="0.5" max="5" step="0.1" value="1.8">
+                  <!-- Check ID: morphSpeedValue -->
+                 <span id="morphSpeedValue">1.8s</span>
+             </div>
+             <div class="slider-group">
+                 <label for="bloomSlider">Bloom Strength:</label>
+                  <!-- Check ID: bloomSlider -->
+                 <input type="range" id="bloomSlider" min="0" max="3" step="0.1" value="1.2">
+                  <!-- Check ID: bloomValue -->
+                 <span id="bloomValue">1.2</span>
+             </div>
+         </div>
+
+        <!-- Toggles -->
+         <div class="ui-section toggles">
+             <div class="toggle-group">
+                 <!-- Check ID: autoRotateToggle -->
+                 <input type="checkbox" id="autoRotateToggle" checked>
+                 <label for="autoRotateToggle">Auto-Rotate</label>
+             </div>
+              <div class="toggle-group">
+                  <!-- Check ID: audioToggleBtn -->
+                 <button id="audioToggleBtn" class="ui-button">Enable Audio Pulse</button>
+                  <!-- Check ID: audioStatus -->
+                 <span id="audioStatus" class="info-text">(Mic Disabled)</span>
+             </div>
+         </div>
+
+    </div> <!-- End of ui-panel -->
+
+    <!-- Libraries -->
+    <!-- Core Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- Controls -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <!-- Post-processing Core -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+
+    <!-- Shader scripts (Dependencies for Passes) -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script> <!-- Added as per error -->
+
+    <!-- Other Passes (like Bloom) -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+
+    <!-- Animation Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
+    <!-- Your Application Script (Must come last) -->
+    <script src="script.js"></script>
+</body>
+</html>
